@@ -160,13 +160,12 @@ class Message(RawMessage):
         del_pre = bool(self._kwargs.get('del_pre', False))
         input_str = self.input_str
         for i in input_str.strip().split(" "):
-            match = re.match(f"({prefix}[a-zA-Z]+)([0-9]*)$", i)
-            if match:
+            if match := re.match(f"({prefix}[a-zA-Z]+)([0-9]*)$", i):
                 items: Sequence[str] = match.groups()
                 self._flags[items[0].lstrip(prefix).lower() if del_pre
                             else items[0].lower()] = items[1] or ''
             else:
-                self._filtered_input_str += ' ' + i
+                self._filtered_input_str += f' {i}'
         self._filtered_input_str = self._filtered_input_str.strip()
         _LOG.debug(
             _LOG_STR,
@@ -226,10 +225,7 @@ class Message(RawMessage):
             reply (``bool``):
                 reply msg if True, else edit
         """
-        if reply:
-            func = self.reply
-        else:
-            func = self.edit
+        func = self.reply if reply else self.edit
         await func("`Process Canceled!`", del_in=5)
 
     async def send_as_file(self,

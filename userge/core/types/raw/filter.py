@@ -32,12 +32,8 @@ _UNLOADED: List[str] = []
 
 def _init(name: str) -> Tuple[bool, bool]:
     name = name.lstrip(Config.CMD_TRIGGER)
-    enabled = True
-    loaded = True
-    if name in _DISABLED:
-        enabled = False
-    if name in _UNLOADED:
-        loaded = False
+    enabled = name not in _DISABLED
+    loaded = name not in _UNLOADED
     return enabled, loaded
 
 

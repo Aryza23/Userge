@@ -177,8 +177,7 @@ async def enable(message: Message) -> None:
     names_ = message.filtered_input_str.split(' ')
     type_ = list(message.flags)
     if 'p' in type_:
-        found = set(names_).intersection(set(userge.manager.plugins))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.plugins)):
             out = await userge.manager.enable_plugins(list(found))
             if out:
                 out_str = "**--Enabled Plugin(s)--**\n\n"
@@ -193,8 +192,7 @@ async def enable(message: Message) -> None:
         for t_name in names_:
             if not t_name.startswith(Config.CMD_TRIGGER):
                 names_.append(Config.CMD_TRIGGER + t_name)
-        found = set(names_).intersection(set(userge.manager.commands))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.commands)):
             out = await userge.manager.enable_commands(list(found))
             if out:
                 out_str = "**--Enabled Command(s)--**\n\n"
@@ -205,8 +203,7 @@ async def enable(message: Message) -> None:
             await message.err(f"commands : {', '.join(names_)} not found!")
             return
     elif 'f' in type_:
-        found = set(names_).intersection(set(userge.manager.filters))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.filters)):
             out = await userge.manager.enable_filters(list(found))
             if out:
                 out_str = "**--Enabled Filter(s)--**\n\n"
@@ -243,8 +240,7 @@ async def disable(message: Message) -> None:
     names_ = message.filtered_input_str.split(' ')
     type_ = list(message.flags)
     if 'p' in type_ and names_:
-        found = set(names_).intersection(set(userge.manager.plugins))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.plugins)):
             out = await userge.manager.disable_plugins(list(found))
             if out:
                 out_str = "**--Disabled Plugin(s)--**\n\n"
@@ -259,8 +255,7 @@ async def disable(message: Message) -> None:
         for t_name in names_:
             if not t_name.startswith(Config.CMD_TRIGGER):
                 names_.append(Config.CMD_TRIGGER + t_name)
-        found = set(names_).intersection(set(userge.manager.commands))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.commands)):
             out = await userge.manager.disable_commands(list(found))
             if out:
                 out_str = "**--Disabled Command(s)--**\n\n"
@@ -271,8 +266,7 @@ async def disable(message: Message) -> None:
             await message.err(f"commands : {', '.join(names_)} not found!")
             return
     elif 'f' in type_ and names_:
-        found = set(names_).intersection(set(userge.manager.filters))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.filters)):
             out = await userge.manager.disable_filters(list(found))
             if out:
                 out_str = "**--Disabled Filter(s)--**\n\n"
@@ -308,8 +302,7 @@ async def load(message: Message) -> None:
         names_ = message.filtered_input_str.split(' ')
         type_ = list(message.flags)
         if 'p' in type_:
-            found = set(names_).intersection(set(userge.manager.plugins))
-            if found:
+            if found := set(names_).intersection(set(userge.manager.plugins)):
                 out = await userge.manager.load_plugins(list(found))
                 if out:
                     out_str = "**--Loaded Plugin(s)--**\n\n"
@@ -324,8 +317,7 @@ async def load(message: Message) -> None:
             for t_name in names_:
                 if not t_name.startswith(Config.CMD_TRIGGER):
                     names_.append(Config.CMD_TRIGGER + t_name)
-            found = set(names_).intersection(set(userge.manager.commands))
-            if found:
+            if found := set(names_).intersection(set(userge.manager.commands)):
                 out = await userge.manager.load_commands(list(found))
                 if out:
                     out_str = "**--Loaded Command(s)--**\n\n"
@@ -336,8 +328,7 @@ async def load(message: Message) -> None:
                 await message.err(f"commands : {', '.join(names_)} not found!")
                 return
         elif 'f' in type_:
-            found = set(names_).intersection(set(userge.manager.filters))
-            if found:
+            if found := set(names_).intersection(set(userge.manager.filters)):
                 out = await userge.manager.load_filters(list(found))
                 if out:
                     out_str = "**--Loaded Filter(s)--**\n\n"
@@ -399,8 +390,7 @@ async def unload(message: Message) -> None:
     names_ = message.filtered_input_str.split(' ')
     type_ = list(message.flags)
     if 'p' in type_ and names_:
-        found = set(names_).intersection(set(userge.manager.plugins))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.plugins)):
             out = await userge.manager.unload_plugins(list(found))
             if out:
                 out_str = "**--Unloaded Plugin(s)--**\n\n"
@@ -415,8 +405,7 @@ async def unload(message: Message) -> None:
         for t_name in names_:
             if not t_name.startswith(Config.CMD_TRIGGER):
                 names_.append(Config.CMD_TRIGGER + t_name)
-        found = set(names_).intersection(set(userge.manager.commands))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.commands)):
             out = await userge.manager.unload_commands(list(found))
             if out:
                 out_str = "**--Unloaded Command(s)--**\n\n"
@@ -427,8 +416,7 @@ async def unload(message: Message) -> None:
             await message.err(f"commands : {', '.join(names_)} not found!")
             return
     elif 'f' in type_ and names_:
-        found = set(names_).intersection(set(userge.manager.filters))
-        if found:
+        if found := set(names_).intersection(set(userge.manager.filters)):
             out = await userge.manager.unload_filters(list(found))
             if out:
                 out_str = "**--Unloaded Filter(s)--**\n\n"

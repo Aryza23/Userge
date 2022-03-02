@@ -240,8 +240,10 @@ async def toggle_vc(msg: Message):
         upsert=True
     )
 
-    text = "**Enabled**" if CMDS_FOR_ALL else "**Disabled**"
-    text += " commands Successfully"
+    text = (
+        "**Enabled**" if CMDS_FOR_ALL else "**Disabled**"
+    ) + " commands Successfully"
+
     await reply_text(msg, text, del_in=5)
 
 
@@ -501,9 +503,9 @@ async def nsc_handler(c: GroupCall, connected: bool):
         os.remove("output.raw")
 
     await userge.send_message(
-        int("-100" + str(c.full_chat.id)) if connected else CHAT_ID,
+        int(f"-100{str(c.full_chat.id)}") if connected else CHAT_ID,
         f"`{'Joined' if connected else 'Left'} Voice-Chat Successfully`",
-        del_in=5 if not connected else -1
+        del_in=5 if not connected else -1,
     )
 
 
@@ -592,9 +594,7 @@ async def yt_down(msg: Message):
             return None
         replied = msg.reply_to_message
         if replied and msg.client.id == msg.from_user.id:
-            if not replied.from_user:
-                return None
-            return replied.from_user.mention
+            return None if not replied.from_user else replied.from_user.mention
         return msg.from_user.mention
 
     BACK_BUTTON_TEXT = (

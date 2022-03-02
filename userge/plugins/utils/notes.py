@@ -173,17 +173,20 @@ async def get_note(message: Message) -> None:
     if Config.OWNER_ID:
         can_access = can_access or message.from_user.id in Config.OWNER_ID
     notename = message.matches[0].group(1).lower()
-    mid, is_global = (0, False)
-    for note in NOTES_DATA[message.chat.id]:
-        if note.lower() == notename:
-            mid, is_global = NOTES_DATA[message.chat.id][note]
-            break
+    mid, is_global = next(
+        (
+            NOTES_DATA[message.chat.id][note]
+            for note in NOTES_DATA[message.chat.id]
+            if note.lower() == notename
+        ),
+        (0, False),
+    )
+
     if not mid:
         return
     if can_access or is_global:
-        replied = message.reply_to_message
         user_id = message.from_user.id
-        if replied:
+        if replied := message.reply_to_message:
             reply_to_message_id = replied.message_id
             if replied.from_user:
                 user_id = replied.from_user.id

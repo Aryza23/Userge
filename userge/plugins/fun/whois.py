@@ -19,8 +19,7 @@ from userge import userge, Message
     'examples': "{tr}whois [user_id | username]"}, allow_channels=False)
 async def who_is(message: Message):
     await message.edit("`Collecting Whois Info.. Hang on!`")
-    user_id = message.input_str
-    if user_id:
+    if user_id := message.input_str:
         try:
             from_user = await message.client.get_users(user_id)
             from_chat = await message.client.get_chat(user_id)
@@ -72,5 +71,5 @@ async def who_is(message: Message):
             await message.delete()
         else:
             cuz = "Chat Send Media Forbidden" if not s_perm else "NO DP Found"
-            message_out_str = "<b>📷 " + cuz + " 📷</b>\n\n" + message_out_str
+            message_out_str = f"<b>📷 {cuz}" + " 📷</b>\n\n" + message_out_str
             await message.edit(message_out_str)

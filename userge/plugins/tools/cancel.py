@@ -18,8 +18,7 @@ async def cancel_(message: Message):
         if ret == 0:
             await message.err("nothing found to cancel", show_help=False)
         return
-    replied = message.reply_to_message  # type: Message
-    if replied:
+    if replied := message.reply_to_message:
         if not replied._call_cancel_callbacks():  # pylint: disable=protected-access
             await message.err("nothing found to cancel", show_help=False)
     else:

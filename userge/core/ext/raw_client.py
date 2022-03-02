@@ -78,10 +78,8 @@ class RawClient(Client):
                 now = perf_counter()
                 req.update(now - 60)
                 if req.has:
-                    to_sl = 0.0
                     diff = now - req.last
-                    if 0 < diff < 1:
-                        to_sl = 1 - diff
+                    to_sl = 1 - diff if 0 < diff < 1 else 0.0
                     diff = now - req.first
                     if req.count > 18:
                         to_sl = max(to_sl, 60 - diff)
@@ -92,11 +90,8 @@ class RawClient(Client):
                             _LOG.debug(_LOG_STR, to_sl, key)
                         await asyncio.sleep(to_sl)
                         now += to_sl
-                count = 0
                 counter = floor(now - 1)
-                for r in self.REQ_LOGS.values():
-                    if r.has and r.last > counter:
-                        count += 1
+                count = sum(1 for r in self.REQ_LOGS.values() if r.has and r.last > counter)
                 if count > 25:
                     _LOG.info(_LOG_STR, 1, key)
                     sleep(1)

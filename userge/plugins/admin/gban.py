@@ -83,8 +83,7 @@ async def gban_user(message: Message):
                                      'user_id': user_id,
                                      'reason': reason,
                                      'chat_ids': gbanned_chats})
-    replied = message.reply_to_message
-    if replied:
+    if replied := message.reply_to_message:
         if replied.text:
             await CHANNEL.fwd_msg(replied)
         await CHANNEL.log(f'$GBAN #prid{user_id} ⬆️')

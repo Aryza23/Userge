@@ -85,7 +85,7 @@ async def url_download(message: Message, url: str) -> Tuple[str, int]:
     downloader.start(blocking=False)
     with message.cancel_callback(downloader.stop):
         while not downloader.isFinished():
-            total_length = downloader.filesize if downloader.filesize else 0
+            total_length = downloader.filesize or 0
             downloaded = downloader.get_dl_size()
             percentage = downloader.get_progress() * 100
             speed = downloader.get_speed(human=True)

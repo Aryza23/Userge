@@ -24,6 +24,8 @@ _LOG = logging.getLogger(__name__)
 logbot.reply_last_msg("Setting Configs ...")
 
 
+
+
 class Config:
     """ Configs to setup Userge """
     API_ID = int(os.environ.get("API_ID"))
@@ -66,7 +68,7 @@ class Config:
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
     ASSERT_SINGLE_INSTANCE = os.environ.get("ASSERT_SINGLE_INSTANCE") == "true"
-    THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
+    THUMB_PATH = f'{DOWN_PATH}thumb_image.jpg'
     TMP_PATH = "userge/plugins/temp/"
     MAX_MESSAGE_LENGTH = 4096
     MSG_DELETE_TIMEOUT = 120
@@ -95,12 +97,10 @@ def get_version() -> str:
     repo.remote(Config.UPSTREAM_REMOTE).fetch()
     ver = f"{versions.__major__}.{versions.__minor__}.{versions.__micro__}"
     if "/usergeteam/userge" in Config.UPSTREAM_REPO.lower():
-        diff = list(repo.iter_commits(f'v{ver}..HEAD'))
-        if diff:
+        if diff := list(repo.iter_commits(f'v{ver}..HEAD')):
             ver = f"{ver}-patch.{len(diff)}"
-    else:
-        diff = list(repo.iter_commits(
-            f'{Config.UPSTREAM_REMOTE}/master..HEAD'))
-        if diff:
-            ver = f"{ver}-custom.{len(diff)}"
-    return ver + '@' + repo.active_branch.name
+    elif diff := list(
+        repo.iter_commits(f'{Config.UPSTREAM_REMOTE}/master..HEAD')
+    ):
+        ver = f"{ver}-custom.{len(diff)}"
+    return f'{ver}@{repo.active_branch.name}'

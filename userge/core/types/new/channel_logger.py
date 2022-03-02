@@ -64,9 +64,7 @@ class ChannelLogger:
         Returns:
             message_id on success or None
         """
-        string = self._string
-        if name:
-            string = _gen_string(name)
+        string = _gen_string(name) if name else self._string
         _LOG.debug(_LOG_STR, f"logging text : {text} to channel : {self._id}")
         try:
             msg = await self._client.send_message(chat_id=self._id,
@@ -143,10 +141,9 @@ class ChannelLogger:
             msg = await message.client.send_cached_media(chat_id=self._id,
                                                          file_id=file_id,
                                                          caption=caption)
-            message_id = msg.message_id
+            return msg.message_id
         else:
-            message_id = await self.log(caption)
-        return message_id
+            return await self.log(caption)
 
     async def forward_stored(self,
                              client: Union['_client.Userge', '_client.UsergeBot'],
@@ -191,9 +188,10 @@ class ChannelLogger:
         if caption:
             u_dict = await client.get_user_dict(user_id)
             chat = await client.get_chat(chat_id)
-            u_dict.update({
-                'chat': chat.title if chat.title else "this group",
-                'count': chat.members_count})
+            u_dict.update(
+                {'chat': chat.title or "this group", 'count': chat.members_count}
+            )
+
             caption = caption.format_map(SafeDict(**u_dict))
         file_id = get_file_id_of_media(message)
         caption, buttons = parse_buttons(caption)

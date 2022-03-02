@@ -217,7 +217,7 @@ class Manager:
         for plg_name in list(set(plugins).intersection(set(self.plugins))):
             ret = await self.plugins[plg_name].enable()
             if ret:
-                enabled.update({plg_name: ret})
+                enabled[plg_name] = ret
         return enabled
 
     async def disable_plugins(self, plugins: List[str]) -> Dict[str, List[str]]:
@@ -226,7 +226,7 @@ class Manager:
         for plg_name in list(set(plugins).intersection(set(self.plugins))):
             ret = await self.plugins[plg_name].disable()
             if ret:
-                disabled.update({plg_name: ret})
+                disabled[plg_name] = ret
         return disabled
 
     async def load_plugins(self, plugins: List[str]) -> Dict[str, List[str]]:
@@ -235,7 +235,7 @@ class Manager:
         for plg_name in list(set(plugins).intersection(set(self.plugins))):
             ret = await self.plugins[plg_name].load()
             if ret:
-                loaded.update({plg_name: ret})
+                loaded[plg_name] = ret
         return loaded
 
     async def unload_plugins(self, plugins: List[str]) -> Dict[str, List[str]]:
@@ -244,7 +244,7 @@ class Manager:
         for plg_name in list(set(plugins).intersection(set(self.plugins))):
             ret = await self.plugins[plg_name].unload()
             if ret:
-                unloaded.update({plg_name: ret})
+                unloaded[plg_name] = ret
         return unloaded
 
     @staticmethod

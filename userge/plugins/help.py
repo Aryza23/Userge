@@ -207,10 +207,7 @@ if userge.has_bot:
         if not userge.dual_mode:
             return await callback_query.answer(
                 "you using [BOT MODE], can't change client.", show_alert=True)
-        if Config.USE_USER_FOR_CLIENT_CHECKS:
-            Config.USE_USER_FOR_CLIENT_CHECKS = False
-        else:
-            Config.USE_USER_FOR_CLIENT_CHECKS = True
+        Config.USE_USER_FOR_CLIENT_CHECKS = not Config.USE_USER_FOR_CLIENT_CHECKS
         await SAVED_SETTINGS.update_one({'_id': 'CURRENT_CLIENT'},
                                         {"$set": {'is_user': Config.USE_USER_FOR_CLIENT_CHECKS}},
                                         upsert=True)
@@ -280,10 +277,9 @@ if userge.has_bot:
             tmp_btns.append(InlineKeyboardButton(
                 "⬅ Back", callback_data=f"back({cur_pos})".encode()))
             if len(cur_pos.split('|')) > 2:
-                tmp_btns.append(InlineKeyboardButton(
-                    "🖥 Main Menu", callback_data="mm".encode()))
-                tmp_btns.append(InlineKeyboardButton(
-                    "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode()))
+                tmp_btns.extend((InlineKeyboardButton(
+                    "🖥 Main Menu", callback_data="mm".encode()), InlineKeyboardButton(
+                    "🔄 Refresh", callback_data=f"refresh({cur_pos})".encode())))
         elif userge.dual_mode:
             cur_clnt = "👲 USER" if Config.USE_USER_FOR_CLIENT_CHECKS else "🤖 BOT"
             tmp_btns.append(InlineKeyboardButton(
@@ -422,7 +418,7 @@ if userge.has_bot:
                 PRVT_MSGS[inline_query.id] = (user.id, user.first_name, msg.strip(': '))
                 prvte_msg = [[InlineKeyboardButton(
                     "Show Message 🔐", callback_data=f"prvtmsg({inline_query.id})")]]
-                msg_c = f"🔒 A **private message** to {'@' + user.username}, "
+                msg_c = f'🔒 A **private message** to {f"@{user.username}"}, '
                 msg_c += "Only he/she can open it."
                 results.append(
                     InlineQueryResultArticle(

@@ -158,8 +158,7 @@ if userge.has_bot:
     async def set_text(_, msg: PyroMessage):
         global START_TEXT  # pylint: disable=global-statement
         text = msg.text.split(' ', maxsplit=1)[1] if ' ' in msg.text else ''
-        replied = msg.reply_to_message
-        if replied:
+        if replied := msg.reply_to_message:
             text = replied.text or replied.caption
         if not text:
             await msg.reply("Text not found!")
@@ -450,12 +449,9 @@ After Adding a var, you can see your media when you start your Bot.
                 await bot.send_message(userge_id, f"{msg.from_user.mention} sent you a sticker.")
             m = await msg.forward(userge_id)
             if m.forward_from or m.forward_sender_name or m.forward_date:
-                id_ = 0
-                for a, b in _U_ID_F_M_ID.items():
-                    if b == user_id:
-                        id_ = a
-                        break
-                if id_:
+                if id_ := next(
+                    (a for a, b in _U_ID_F_M_ID.items() if b == user_id), 0
+                ):
                     del _U_ID_F_M_ID[id_]
                     await U_ID_F_M_ID.delete_one({"user_id": user_id})
 
@@ -531,7 +527,7 @@ Type /send to confirm or /cancel to exit.
         IN_CONVO = True
         temp_msgs = []
         async with userge.bot.conversation(
-                msg.chat.id, timeout=30, limit=7) as conv:  # 5 post msgs and 2 command msgs
+                    msg.chat.id, timeout=30, limit=7) as conv:  # 5 post msgs and 2 command msgs
             await conv.send_message(MESSAGE)
             filter_ = filters.create(lambda _, __, ___: filters.incoming & ~filters.edited)
             while True:
@@ -539,9 +535,9 @@ Type /send to confirm or /cancel to exit.
                 if response.text and response.text.startswith("/cancel"):
                     IN_CONVO = False
                     return await msg.reply("Broadcast process Cancelled.")
-                if len(temp_msgs) >= 1 and response.text == "/done":
+                if temp_msgs and response.text == "/done":
                     break
-                if len(temp_msgs) >= 1 and response.text == "/preview":
+                if temp_msgs and response.text == "/preview":
                     conv._count -= 1
                     for i in temp_msgs:
                         if i.poll:

@@ -189,15 +189,13 @@ async def set_custom_nopm_message(message: Message):
         await message.edit('`Custom NOpm message reset`', del_in=3, log=True)
         noPmMessage = bk_noPmMessage
         await SAVED_SETTINGS.find_one_and_delete({'_id': 'CUSTOM NOPM MESSAGE'})
+    elif string := message.input_or_reply_raw:
+        await message.edit('`Custom NOpm message saved`', del_in=3, log=True)
+        noPmMessage = string
+        await SAVED_SETTINGS.update_one(
+            {'_id': 'CUSTOM NOPM MESSAGE'}, {"$set": {'data': string}}, upsert=True)
     else:
-        string = message.input_or_reply_raw
-        if string:
-            await message.edit('`Custom NOpm message saved`', del_in=3, log=True)
-            noPmMessage = string
-            await SAVED_SETTINGS.update_one(
-                {'_id': 'CUSTOM NOPM MESSAGE'}, {"$set": {'data': string}}, upsert=True)
-        else:
-            await message.err("invalid input!")
+        await message.err("invalid input!")
 
 
 @userge.on_cmd("ipmmsg", about={
@@ -205,8 +203,7 @@ async def set_custom_nopm_message(message: Message):
     'usage': "{tr}ipmmsg [text | reply to text msg]"}, allow_channels=False)
 async def change_inline_message(message: Message):
     """ set inline pm message """
-    string = message.input_or_reply_raw
-    if string:
+    if string := message.input_or_reply_raw:
         await message.edit('`Custom inline pm message saved`', del_in=3, log=True)
         await SAVED_SETTINGS.update_one(
             {'_id': 'CUSTOM_INLINE_PM_MESSAGE'}, {"$set": {'data': string}}, upsert=True)
@@ -233,15 +230,13 @@ async def set_custom_blockpm_message(message: Message):
         await message.edit('`Custom BLOCKpm message reset`', del_in=3, log=True)
         blocked_message = bk_blocked_message
         await SAVED_SETTINGS.find_one_and_delete({'_id': 'CUSTOM BLOCKPM MESSAGE'})
+    elif string := message.input_or_reply_raw:
+        await message.edit('`Custom BLOCKpm message saved`', del_in=3, log=True)
+        blocked_message = string
+        await SAVED_SETTINGS.update_one(
+            {'_id': 'CUSTOM BLOCKPM MESSAGE'}, {"$set": {'data': string}}, upsert=True)
     else:
-        string = message.input_or_reply_raw
-        if string:
-            await message.edit('`Custom BLOCKpm message saved`', del_in=3, log=True)
-            blocked_message = string
-            await SAVED_SETTINGS.update_one(
-                {'_id': 'CUSTOM BLOCKPM MESSAGE'}, {"$set": {'data': string}}, upsert=True)
-        else:
-            await message.err("invalid input!")
+        await message.err("invalid input!")
 
 
 @userge.on_cmd(
@@ -267,7 +262,7 @@ async def view_current_blockPM_msg(message: Message):
 async def uninvitedPmHandler(message: Message):
     """ pm message handler """
     user_dict = await userge.get_user_dict(message.from_user.id)
-    user_dict.update({'chat': message.chat.title if message.chat.title else "this group"})
+    user_dict.update({'chat': message.chat.title or "this group"})
     if message.from_user.is_verified:
         return
     if message.from_user.id in pmCounter:

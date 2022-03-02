@@ -97,10 +97,7 @@ class Plugin:
     def add(self, obj: Union['command.Command', '_filter.Filter']) -> None:
         """ add command or filter to plugin """
         obj.plugin_name = self.name
-        if isinstance(obj, command.Command):
-            type_ = self.commands
-        else:
-            type_ = self.filters
+        type_ = self.commands if isinstance(obj, command.Command) else self.filters
         for flt in type_:
             if flt.name == obj.name:
                 type_.remove(flt)
@@ -114,27 +111,19 @@ class Plugin:
 
     async def enable(self) -> List[str]:
         """ enable all commands in the plugin """
-        if self.is_enabled:
-            return []
-        return await _do_it(self, 'enable')
+        return [] if self.is_enabled else await _do_it(self, 'enable')
 
     async def disable(self) -> List[str]:
         """ disable all commands in the plugin """
-        if not self.is_enabled:
-            return []
-        return await _do_it(self, 'disable')
+        return [] if not self.is_enabled else await _do_it(self, 'disable')
 
     async def load(self) -> List[str]:
         """ load all commands in the plugin """
-        if self.is_loaded:
-            return []
-        return await _do_it(self, 'load')
+        return [] if self.is_loaded else await _do_it(self, 'load')
 
     async def unload(self) -> List[str]:
         """ unload all commands in the plugin """
-        if not self.is_loaded:
-            return []
-        return await _do_it(self, 'unload')
+        return [] if not self.is_loaded else await _do_it(self, 'unload')
 
 
 async def _do_it(plg: Plugin, work_type: str) -> List[str]:
